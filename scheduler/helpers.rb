@@ -1,8 +1,8 @@
 module Scheduler
   module Helpers
 
-    def show(template, options = {})
-      mustache template, options
+    def show(template, options = {}, locals = {})
+      mustache template, options, locals
     end
 
   end
