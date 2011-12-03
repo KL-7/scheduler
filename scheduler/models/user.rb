@@ -4,13 +4,16 @@ module Scheduler
   module Models
     class User
 
-      attr_accessor :name, :hashed_password, :salt
+      attr_accessor :name, :hashed_password, :salt, :id
 
-      def initialize(attrs = {})
-        ([:name, :password] & attrs.keys).each { |k| send "#{k}=", attrs[k] }
+      def initialize(name = nil, password = nil)
+        self.name = name if name
+        self.password = password
       end
 
       def password=(pass)
+        return unless pass
+
         self.salt = User::random_string(10) unless self.salt
         self.hashed_password = User.encrypt(pass, self.salt)
       end
@@ -22,8 +25,7 @@ module Scheduler
       class << self
 
         def authenticate(name, pass)
-          # TODO: implement user search, e.g. `user = User.first(name: name)`
-          user = User.new(name: name, password: pass)
+          user = DAO.find(:users, name: name)
           user if user && user.valid_password?(pass)
         end
 
@@ -36,6 +38,19 @@ module Scheduler
           (1..len).map{ chars[rand(chars.size - 1)] }.join
         end
 
+        def from_hash(attrs = {})
+          new.tap do |u|
+            [:name, :hashed_password, :salt].each { |attr| u.send("#{attr}=", attrs[attr.to_s]) }
+            u.id = attrs['_id'].to_s
+          end
+        end
+
+      end
+
+      def to_hash
+        { name: name, hashed_password: hashed_password, salt: salt }.tap do |h|
+          h.merge!(:_id => BSON::ObjectId.new(id)) if id
+        end
       end
 
     end

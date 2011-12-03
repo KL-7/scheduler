@@ -2,9 +2,9 @@
 %html
   %head
     %title= @title || 'Scheduler'
-    %link{ :href => "/css/bootstrap.css", :rel => "stylesheet", :type => "text/css" }/
-    %link{ :href => "/css/app.css", :rel => "stylesheet", :type => "text/css" }/
+    %link{ href: "/css/bootstrap.css", rel: "stylesheet", type: "text/css" }/
+    %link{ href: "/css/app.css", rel: "stylesheet", type: "text/css" }/
 
   %body
-    .container
+    #content.container
       = yield
