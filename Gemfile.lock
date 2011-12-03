@@ -12,13 +12,13 @@ GEM
     eventmachine (0.12.10)
     execjs (1.2.9)
       multi_json (~> 1.0)
+    haml (3.1.4)
     libv8 (3.3.10.4)
     method_source (0.6.7)
       ruby_parser (>= 2.3.1)
     mongo (1.4.0)
       bson (= 1.4.0)
     multi_json (1.0.4)
-    mustache (0.99.4)
     pry (0.9.7.4)
       coderay (~> 0.9.8)
       method_source (~> 0.6.7)
@@ -52,8 +52,8 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   coffee-script
+  haml
   mongo
-  mustache
   pry
   sass
   shotgun

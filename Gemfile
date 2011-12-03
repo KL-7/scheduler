@@ -4,7 +4,7 @@ gem 'mongo'
 gem 'bson_ext'
 
 gem 'sinatra'
-gem 'mustache'
+gem 'haml'
 gem 'sass'
 gem 'coffee-script'
 gem 'therubyracer'

@@ -1,0 +1,13 @@
+%form#login_form.form-stacked{ :action => "/login", :method => "post" }
+
+  .clearfix
+    %label{ :for => "username" } Username:
+    .input
+      %input#username{ :name => "username", :type => "text" }/
+
+  .clearfix
+    %label{:for => "password"} Password:
+    .input
+      %input#password{ :name => "password", :type => "password" }/
+
+  %input.btn.primary{ :type => "submit", :value => "Login" }/

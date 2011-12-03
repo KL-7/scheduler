@@ -1,8 +1,5 @@
-require 'mustache/sinatra'
-
 $:.unshift File.expand_path(File.dirname(__FILE__))
 require 'helpers'
-require 'views/layout'
 require 'models/user'
 
 module Scheduler
@@ -14,12 +11,12 @@ module Scheduler
   end
 
   class SassHandler < Sinatra::Base
-    set :views, Scheduler.expand_path('templates/sass')
+    set :views, Scheduler.expand_path('views/sass')
     get '/css/*.css'do sass params[:splat].first.to_sym end
   end
 
   class CoffeeHandler < Sinatra::Base
-    set :views, Scheduler.expand_path('templates/coffee')
+    set :views, Scheduler.expand_path('views/coffee')
     get "/js/*.js" do coffee params[:splat].first.to_sym end
   end
 
@@ -28,18 +25,11 @@ module Scheduler
     use SassHandler
     use CoffeeHandler
 
-    register Mustache::Sinatra
     helpers Helpers
 
     set :app_file, __FILE__
     set :static, true
     set :public_folder, Scheduler.expand_path('public')
-
-    set :mustache, {
-        namespace: Scheduler,
-        views: Scheduler.expand_path('views'),
-        templates: Scheduler.expand_path('templates')
-    }
 
     enable :session
 
