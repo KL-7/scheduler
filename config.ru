@@ -2,6 +2,6 @@ require 'rubygems'
 require 'bundler'
 Bundler.require
 
-require './scheduler/app'
+require './scheduler'
 
 run Scheduler::App.new

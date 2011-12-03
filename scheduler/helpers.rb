@@ -1,4 +1,5 @@
 module Scheduler
+
   module Helpers
 
     def show(template, options = {}, locals = {})
@@ -6,4 +7,5 @@ module Scheduler
     end
 
   end
+
 end
