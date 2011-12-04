@@ -24,7 +24,7 @@ module Scheduler
       if Sinatra::Application.production?
         mongo_uri = URI.parse(ENV['MONGOHQ_URL'])
         db_name = mongo_uri.path.gsub(/^\//, '')
-        Mongo::Connection.from_uri(mongo_uri)[db_name]
+        Mongo::Connection.from_uri(mongo_uri.to_s)[db_name]
       else
         Mongo::Connection.new.db("scheduler-#{App.environment}")
       end
