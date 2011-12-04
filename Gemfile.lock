@@ -42,8 +42,6 @@ GEM
       sexp_processor (~> 3.0)
     sass (3.1.11)
     sexp_processor (3.0.8)
-    shotgun (0.9)
-      rack (>= 1.0)
     sinatra (1.3.1)
       rack (~> 1.3, >= 1.3.4)
       rack-protection (~> 1.1, >= 1.1.2)
@@ -76,7 +74,6 @@ DEPENDENCIES
   mongo
   pry!
   sass
-  shotgun
   sinatra
   sinatra-contrib
   therubyracer
