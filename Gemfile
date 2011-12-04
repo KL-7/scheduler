@@ -4,6 +4,7 @@ gem 'mongo'
 gem 'bson_ext'
 
 gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'haml'
 gem 'sass'
 gem 'coffee-script'

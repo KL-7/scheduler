@@ -9,9 +9,6 @@ module Scheduler
 
     helpers Helpers
 
-    set :app_file, __FILE__
-    set :static, true
-
     enable :sessions
     set    :session_secret, 'O7PNBfQSNVLYETYdHvO4RqIrn8scsl'
 
@@ -35,6 +32,11 @@ module Scheduler
       else
         show :login
       end
+    end
+
+    configure :development do
+      require 'sinatra/reloader'
+      register Sinatra::Reloader
     end
 
   end

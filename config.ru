@@ -1,3 +1,2 @@
 require './scheduler'
-
-run Scheduler::App.new
+run Scheduler::App
