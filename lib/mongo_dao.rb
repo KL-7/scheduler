@@ -23,6 +23,11 @@ class MongoDAO
     @db[coll].insert(Array(args).map { |obj| obj.to_hash })
   end
 
+  def update(coll, doc)
+    hash = doc.to_hash
+    @db[coll].update({ _id: hash[:_id] }, hash)
+  end
+
   protected
 
   def collection_klass(coll)

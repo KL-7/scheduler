@@ -4,11 +4,14 @@ module Scheduler
   module Models
     class User
 
-      attr_accessor :name, :hashed_password, :salt, :id
+      FIELDS = [:name, :hashed_password, :salt, :role]
 
-      def initialize(name = nil, password = nil)
-        self.name = name if name
+      attr_accessor *FIELDS, :id
+
+      def initialize(name = nil, password = nil, role = :student)
+        self.name = name
         self.password = password
+        self.role = role
       end
 
       def password=(pass)
@@ -39,17 +42,19 @@ module Scheduler
         end
 
         def from_hash(attrs = {})
-          new.tap do |u|
-            [:name, :hashed_password, :salt].each { |attr| u.send("#{attr}=", attrs[attr.to_s]) }
-            u.id = attrs['_id'].to_s
+          new.tap do |user|
+            user.id = attrs['_id'].to_s
+            FIELDS.each do |attr|
+              user.send("#{attr}=", attrs[attr.to_s])
+            end
           end
         end
 
       end
 
       def to_hash
-        { name: name, hashed_password: hashed_password, salt: salt }.tap do |h|
-          h.merge!(:_id => BSON::ObjectId.new(id)) if id
+        FIELDS.inject({}){ |m, k| m.merge k => send(k) }.tap do |h|
+          h.merge!(_id: BSON::ObjectId(id)) if BSON::ObjectId.legal?(id)
         end
       end
 
