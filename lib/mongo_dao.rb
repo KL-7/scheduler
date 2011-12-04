@@ -20,11 +20,11 @@ class MongoDAO
   end
 
   def insert(coll, *args)
-    @db[coll].insert(Array(args).map { |obj| obj.to_hash })
+    @db[coll].insert(Array(args).map { |obj| obj.to_mongo_hash })
   end
 
   def update(coll, doc)
-    hash = doc.to_hash
+    hash = doc.to_mongo_hash
     @db[coll].update({ _id: hash[:_id] }, hash)
   end
 
@@ -44,9 +44,9 @@ class MongoDAO
     return unless result && (klass = collection_klass(coll))
 
     if result.is_a?(Array)
-      result.map { |h| klass.from_hash(h) }
+      result.map { |h| klass.from_mongo_hash(h) }
     else
-      klass.from_hash(result)
+      klass.from_mongo_hash(result)
     end
   end
 

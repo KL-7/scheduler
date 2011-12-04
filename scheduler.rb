@@ -5,6 +5,7 @@ require 'bundler'
 Bundler.require
 
 require 'lib/mongo_dao'
+require 'lib/mongo_fields'
 require 'scheduler/helpers'
 require 'scheduler/assets_handlers'
 require 'scheduler/models/user'

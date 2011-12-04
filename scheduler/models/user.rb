@@ -4,9 +4,9 @@ module Scheduler
   module Models
     class User
 
-      FIELDS = [:name, :hashed_password, :salt, :role]
+      include MongoFields
 
-      attr_accessor *FIELDS, :id
+      fields :name, :hashed_password, :salt, :role
 
       def initialize(name = nil, password = nil, role = :student)
         self.name = name
@@ -41,21 +41,6 @@ module Scheduler
           (1..len).map{ chars[rand(chars.size - 1)] }.join
         end
 
-        def from_hash(attrs = {})
-          new.tap do |user|
-            user.id = attrs['_id'].to_s
-            FIELDS.each do |attr|
-              user.send("#{attr}=", attrs[attr.to_s])
-            end
-          end
-        end
-
-      end
-
-      def to_hash
-        FIELDS.inject({}){ |m, k| m.merge k => send(k) }.tap do |h|
-          h.merge!(_id: BSON::ObjectId(id)) if BSON::ObjectId.legal?(id)
-        end
       end
 
     end
