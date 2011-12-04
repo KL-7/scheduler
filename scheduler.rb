@@ -12,10 +12,23 @@ require 'scheduler/app'
 
 module Scheduler
 
-  def self.database
-    @database ||= Mongo::Connection.new.db("scheduler-#{App.environment}")
+  class << self
+
+    private
+
+    def database
+      @database ||= init_database
+    end
+
+    def init_database
+      if Sinatra::Application.production?
+        Mongo::Connection.from_uri(URI.parse(ENV['MONGOHQ_URL'])).db
+      else
+        Mongo::Connection.new.db("scheduler-#{App.environment}")
+      end
+    end
+
   end
-  private_class_method :database
 
   DAO = MongoDAO.new(database, Models)
 
