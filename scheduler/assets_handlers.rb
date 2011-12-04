@@ -4,7 +4,7 @@ module Scheduler
 
   class SassHandler < Sinatra::Base
     set :views, File.join(VIEWS_DIR, 'sass')
-    get '/css/*.css'do sass params[:splat].first.to_sym end
+    get '/css/*.css' do sass params[:splat].first.to_sym end
   end
 
   class CoffeeHandler < Sinatra::Base
