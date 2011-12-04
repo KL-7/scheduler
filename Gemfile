@@ -16,4 +16,4 @@ gem 'shotgun'
 gem 'thin'
 
 # use pry from git until version that doesn't crash inside sinatra routes is released
-gem 'pry', git: 'git://github.com/pry/pry.git', :ref => 'ab458ff1f9c44dadd3060da24562a5b5014bf057'
+gem 'pry', git: 'git://github.com/pry/pry.git'#, :ref => 'ab458ff1f9c44dadd3060da24562a5b5014bf057'

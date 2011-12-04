@@ -24,7 +24,6 @@ module Scheduler
     end
 
     get '/login' do
-      binding.pry
       show :login
     end
 
