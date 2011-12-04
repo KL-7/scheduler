@@ -2,9 +2,21 @@
 %html
   %head
     %title= @title || 'Scheduler'
-    %link{ href: "/css/bootstrap.css", rel: "stylesheet", type: "text/css" }/
-    %link{ href: "/css/app.css", rel: "stylesheet", type: "text/css" }/
+    %link{ href: "/css/bootstrap.css", rel: "stylesheet", type: "text/css" }
+    %link{ href: "/css/app.css", rel: "stylesheet", type: "text/css" }
+    %script{ src: "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" }
+    %script{ src: "/js/bootstrap-alerts.js" }
+    %script{ src: "/js/app.js" }
 
   %body
+    - if current_user
+      %a#logout{ href: "/logout" } Logout
+
     #content.container
+      - unless flash.empty?
+        - flash.each do |type, msg|
+          .alert-message{ class: type }
+            %a.close{ href: "#" } ×
+            %p= msg
+
       = yield

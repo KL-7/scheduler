@@ -6,33 +6,44 @@ module Scheduler
 
     use SassHandler
     use CoffeeHandler
-
     helpers Helpers
 
-    enable :sessions
-    set    :session_secret, 'O7PNBfQSNVLYETYdHvO4RqIrn8scsl'
+
+    #### routes ####
+
 
     get '/' do
-      if @user = DAO.find_by_id(:users, session['user_id'])
-        show :root
-      else
-        redirect '/login'
-      end
+      login!
+      show :root
     end
 
     get '/login' do
+      redirect '/' if current_user
       show :login
     end
 
     post '/login' do
       user = User.authenticate(params['username'], params['password'])
       if user
-        session[:user_id] = user.id
+        session['user_id'] = user.id
         redirect '/'
       else
+        flash[:error] = 'Wrong email or password.'
         show :login
       end
     end
+
+    get '/logout' do
+      session.delete 'user_id'
+      redirect '/login'
+    end
+
+
+    #### configs ####
+
+
+    enable :sessions
+    set    :session_secret, 'O7PNBfQSNVLYETYdHvO4RqIrn8scsl'
 
     configure :development do
       require 'sinatra/reloader'
