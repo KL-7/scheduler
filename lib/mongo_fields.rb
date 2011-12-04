@@ -29,10 +29,10 @@ module MongoFields
 
     def fields(*new_fields)
       new_fields = Array(new_fields).map(&:to_sym)
-      raise ArgumentError("Fields #{RESERVED_FIELDS * ', '} are reserved.") unless (new_fields & RESERVED_FIELDS).empty?
+      raise ArgumentError.new("Fields #{RESERVED_FIELDS * ', '} are reserved.") unless (new_fields & RESERVED_FIELDS).empty?
 
       duplicates = mongo_fields & new_fields
-      raise ArgumentError("Fields #{duplicates * ', '} are already defined.") unless duplicates.empty?
+      raise ArgumentError.new("Fields #{duplicates * ', '} are already defined.") unless duplicates.empty?
 
       mongo_fields.concat new_fields
     end
