@@ -5,6 +5,7 @@ gem 'bson_ext'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'rack-flash'
 
 gem 'haml'
 gem 'sass'

@@ -2,6 +2,8 @@ module Scheduler
 
   module Helpers
 
+    FLASH_CLASSES = { notice: :success, alert: :error }
+
     def show(template, options = {}, locals = {})
       haml template, options, locals
     end
@@ -14,8 +16,8 @@ module Scheduler
       @current_user ||= DAO.find_by_id(:users, session['user_id'])
     end
 
-    def flash
-      @flash ||= {}
+    def flash_classes
+      FLASH_CLASSES
     end
 
     def navigation

@@ -18,6 +18,7 @@ module Scheduler
 
     include Scheduler::Models
 
+    use Rack::Flash, :sweep => true
     use SassHandler
     use CoffeeHandler
     helpers Helpers
@@ -51,8 +52,12 @@ module Scheduler
     end
 
     post '/a/user' do
-      user = User.new params['name'], params['password'], params['role'].to_sym
-      Scheduler::DAO.insert :users, user
+      unless params['name'].empty? || params['password'].empty?
+        user = User.new params['name'], params['password'], params['role'].to_sym
+        Scheduler::DAO.insert :users, user
+      else
+        flash[:alert] = "Name and password can't be blank."
+      end
       redirect '/a/users'
     end
 
@@ -77,7 +82,7 @@ module Scheduler
         session['user_id'] = user.id
         redirect '/'
       else
-        flash[:error] = 'Wrong email or password.'
+        flash.now[:alert] = 'Wrong email or password.'
         show :login, layout: false
       end
     end

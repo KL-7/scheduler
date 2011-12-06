@@ -22,8 +22,8 @@
   %table.bordered-table
     %thead
       %th #
-      %th Name
-      %th Role
+      %th{ width: 300 } Name
+      %th{ width: 300 } Role
       %th{ width: 200 } Actions
     %tbody
     - @users.each_with_index do |u, i|
@@ -32,7 +32,8 @@
         %td= u.name.empty? ? '&mdash;' : u.name
         %td= u.role.empty? ? '&mdash;' : u.role
         %td
-          %button.btn.delete-user{ 'data-user-id' => u.id } Delete
+          - unless u.id == current_user.id
+            %button.btn.delete-user{ 'data-user-id' => u.id } Delete
           %button.btn.reset-user-password{ 'data-user-id' => u.id } Reset password
 
 - else

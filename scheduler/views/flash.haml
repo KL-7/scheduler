@@ -1,5 +1,5 @@
-- unless flash.empty?
-  - flash.each do |type, msg|
-    .alert-message{ class: type }
+- flash_classes.each do |type, css_class|
+  - if flash[type]
+    .alert-message{ class: css_class }
       %a.close{ href: "#" } ×
-      %p= msg
+      %p= flash[type]
