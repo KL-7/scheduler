@@ -52,11 +52,11 @@ module Scheduler
     end
 
     post '/a/user' do
-      unless params['name'].empty? || params['password'].empty?
+      unless params['name'].empty? || params['password'].empty? || DAO.find(:users, name: name)
         user = User.new params['name'], params['password'], params['role'].to_sym
         Scheduler::DAO.insert :users, user
       else
-        flash[:alert] = "Name and password can't be blank."
+        flash[:alert] = "Name and password can't be blank. Name should be uniq."
       end
       redirect '/a/users'
     end
@@ -82,7 +82,7 @@ module Scheduler
         session['user_id'] = user.id
         redirect '/'
       else
-        flash.now[:alert] = 'Wrong email or password.'
+        flash.now[:alert] = 'Wrong name or password.'
         show :login, layout: false
       end
     end
