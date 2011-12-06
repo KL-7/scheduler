@@ -9,6 +9,7 @@ require 'lib/mongo_fields'
 require 'scheduler/helpers'
 require 'scheduler/assets_handlers'
 require 'scheduler/models/user'
+require 'scheduler/models/subject'
 require 'scheduler/app'
 
 module Scheduler

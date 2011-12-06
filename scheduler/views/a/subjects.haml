@@ -1,0 +1,21 @@
+%form.form.well{ action: '/a/subject', method: 'post' }
+  %div.clearfix.inline-input
+    %label{ for: 'name' } Name:
+    %div.input
+      %input{ name: "name", type: "text" }/
+
+  %input.btn.primary{ type: "submit", value: "Create" }/
+
+- unless @subjects.empty?
+  %table.bordered-table
+    %thead
+      %th #
+      %th Name
+    %tbody
+    - @subjects.each_with_index do |s, i|
+      %tr
+        %th= i
+        %td= s.name.empty? ? '&mdash;' : s.name
+
+- else
+  No subjects.

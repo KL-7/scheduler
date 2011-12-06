@@ -21,6 +21,17 @@ module Scheduler
       login! :admin
     end
 
+    get '/a/subjects' do
+      @subjects = Scheduler::DAO.all :subjects
+      show :'a/subjects'
+    end
+
+    post '/a/subject' do
+      subject = Subject.new params['name']
+      Scheduler::DAO.insert :subjects, subject
+      redirect '/a/subjects'
+    end
+
     get '/a/users' do
       @users = Scheduler::DAO.all :users
       show :'a/users'
