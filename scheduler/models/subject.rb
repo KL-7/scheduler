@@ -1,5 +1,3 @@
-require 'digest/sha2'
-
 module Scheduler
   module Models
     class Subject

@@ -51,6 +51,11 @@ module Scheduler
 
       end
 
+      def method_missing(*args, &block)
+        # for every role defines method to check if the user has this role (e.g. admin? method for :admin role)
+        args.first.to_s =~ /^(#{ROLES.join('|')})\?$/ ? role.to_s == $1 : super
+      end
+
     end
   end
 end

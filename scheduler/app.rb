@@ -2,6 +2,20 @@ module Scheduler
 
   class App < Sinatra::Base
 
+    #### configs ####
+
+    configure :development do
+      require 'sinatra/reloader'
+      register Sinatra::Reloader
+    end
+
+    enable :sessions
+    set    :session_secret, 'O7PNBfQSNVLYETYdHvO4RqIrn8scsl'
+    set    :method_override, true
+
+
+    #### includes ####
+
     include Scheduler::Models
 
     use SassHandler
@@ -10,7 +24,6 @@ module Scheduler
 
 
     #### routes ####
-
 
     get '/' do
       login!
@@ -72,19 +85,6 @@ module Scheduler
     get '/logout' do
       session.delete 'user_id'
       redirect '/login'
-    end
-
-
-    #### configs ####
-
-
-    enable :sessions
-    set    :session_secret, 'O7PNBfQSNVLYETYdHvO4RqIrn8scsl'
-    set    :method_override, true
-
-    configure :development do
-      require 'sinatra/reloader'
-      register Sinatra::Reloader
     end
 
   end

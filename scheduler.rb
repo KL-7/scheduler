@@ -6,10 +6,12 @@ Bundler.require
 
 require 'lib/mongo_dao'
 require 'lib/mongo_fields'
+
+Dir.glob('scheduler/models/*').each { |f| require f }
+
 require 'scheduler/helpers'
 require 'scheduler/assets_handlers'
-require 'scheduler/models/user'
-require 'scheduler/models/subject'
+
 require 'scheduler/app'
 
 module Scheduler
