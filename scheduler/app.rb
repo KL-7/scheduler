@@ -17,19 +17,29 @@ module Scheduler
       show :root
     end
     
+    before '/a/*' do
+      login! :admin
+    end
+
     get '/a/users' do
       @users = Scheduler::DAO.all :users
       show :'a/users'
     end
 
-    post '/a/users' do
+    post '/a/user' do
       user = User.new params['name'], params['password'], params['role'].to_sym
       Scheduler::DAO.insert :users, user
       redirect '/a/users'
     end
-    
-    before '/a/*' do
-      login! :admin
+
+    delete '/a/user/:id' do
+      Scheduler::DAO.delete :users, params[:id]
+    end
+
+    post '/a/user/:id/reset-password' do
+      u = Scheduler::DAO.find_by_id :users, params['id']
+      u.reset_password
+      Scheduler::DAO.update :users, u
     end
 
     get '/login' do
@@ -59,6 +69,7 @@ module Scheduler
 
     enable :sessions
     set    :session_secret, 'O7PNBfQSNVLYETYdHvO4RqIrn8scsl'
+    set    :method_override, true
 
     configure :development do
       require 'sinatra/reloader'

@@ -1,22 +1,39 @@
-%form.form-stacked.well{ action: '/a/users', method: 'post' }
-  %div.clearfix
+%form.form.well{ action: '/a/user', method: 'post' }
+  %div.clearfix.inline-input
     %label{ for: 'name' } Name:
-    %input{ name: "name", type: "text" }/
+    %div.input
+      %input{ name: "name", type: "text" }/
 
-  %div.clearfix
+  %div.clearfix.inline-input
     %label{ for: 'password' } Password:
-    %input{ name: "password", type: "password" }/
+    %div.input
+      %input{ name: "password", type: "password" }/
 
-  %div.clearfix
+  %div.clearfix.inline-input
     %label{ for: 'role' } Role:
-    %input{ name: "role", type: "text" }/
-    
-  %input{ type: 'submit', value: 'Create' }
+    %div.input
+      %select{ name: "role" }
+        - User::ROLES.each do |role|
+          %option= role
+
+  %input.btn.primary{ type: "submit", value: "Create" }/
 
 - unless @users.empty?
-  %ul
-    - @users.each do |u|
-      %li= u.name
+  %table.bordered-table
+    %thead
+      %th #
+      %th Name
+      %th Role
+      %th{ width: 200 } Actions
+    %tbody
+    - @users.each_with_index do |u, i|
+      %tr
+        %th= i
+        %td= u.name.empty? ? '&mdash;' : u.name
+        %td= u.role.empty? ? '&mdash;' : u.role
+        %td
+          %button.btn.delete-user{ 'data-user-id' => u.id } Delete
+          %button.btn.reset-user-password{ 'data-user-id' => u.id } Reset password
+
 - else
   No users.
-  

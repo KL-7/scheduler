@@ -10,7 +10,11 @@
 
   %body
     - if current_user
-      %a#logout{ href: "/logout" } Logout
+      %div#user-block
+        = current_user.name
+        - if current_user.role
+          = "(#{current_user.role})"
+        %a{ href: "/logout" } Logout
 
     #content.container
       - unless flash.empty?

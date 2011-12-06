@@ -8,10 +8,14 @@ module Scheduler
 
       fields :name, :hashed_password, :salt, :role
 
+      ROLES = [:student, :admin, :lecturer]
+
+      DEFAULT_PASSWORD = '111111'
+
       def initialize(name = nil, password = nil, role = :student)
         self.name = name
         self.password = password
-        self.role = role
+        self.role = ROLES.include?(role) ? role : :student
       end
 
       def password=(pass)
@@ -23,6 +27,10 @@ module Scheduler
 
       def valid_password?(pass)
         User.encrypt(pass, salt) == hashed_password
+      end
+
+      def reset_password
+        self.password = DEFAULT_PASSWORD
       end
 
       class << self
