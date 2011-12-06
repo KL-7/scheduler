@@ -16,6 +16,21 @@ module Scheduler
       login!
       show :root
     end
+    
+    get '/a/users' do
+      @users = Scheduler::DAO.all :users
+      show :'a/users'
+    end
+
+    post '/a/users' do
+      user = User.new params['name'], params['password'], params['role'].to_sym
+      Scheduler::DAO.insert :users, user
+      redirect '/a/users'
+    end
+    
+    before '/a/*' do
+      login! :admin
+    end
 
     get '/login' do
       redirect '/' if current_user

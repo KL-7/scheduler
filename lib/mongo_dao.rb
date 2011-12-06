@@ -16,7 +16,7 @@ class MongoDAO
   end
 
   def all(coll, *args)
-    (@db[coll].find(args) || []).to_a
+    objectify(coll, @db[coll].find(*args).to_a || [])
   end
 
   def insert(coll, *args)
@@ -30,7 +30,7 @@ class MongoDAO
 
   protected
 
-  def collection_klass(coll)
+  def collection_class(coll)
     return unless coll
 
     if @models_module
@@ -41,7 +41,7 @@ class MongoDAO
   end
 
   def objectify(coll, result)
-    return unless result && (klass = collection_klass(coll))
+    return unless result && (klass = collection_class(coll))
 
     if result.is_a?(Array)
       result.map { |h| klass.from_mongo_hash(h) }

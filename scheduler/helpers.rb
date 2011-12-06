@@ -6,8 +6,8 @@ module Scheduler
       haml template, options, locals
     end
 
-    def login!
-      redirect '/login' unless current_user
+    def login!(role = nil)
+      redirect '/login' unless current_user && (role.nil? || current_user.role == role)
     end
 
     def current_user

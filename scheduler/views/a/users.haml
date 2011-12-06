@@ -1,0 +1,22 @@
+%form.form-stacked.well{ action: '/a/users', method: 'post' }
+  %div.clearfix
+    %label{ for: 'name' } Name:
+    %input{ name: "name", type: "text" }/
+
+  %div.clearfix
+    %label{ for: 'password' } Password:
+    %input{ name: "password", type: "password" }/
+
+  %div.clearfix
+    %label{ for: 'role' } Role:
+    %input{ name: "role", type: "text" }/
+    
+  %input{ type: 'submit', value: 'Create' }
+
+- unless @users.empty?
+  %ul
+    - @users.each do |u|
+      %li= u.name
+- else
+  No users.
+  
