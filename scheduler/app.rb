@@ -41,24 +41,36 @@ module Scheduler
     end
 
     post '/a/subject' do
-      subject = Subject.new params['name']
-      Scheduler::DAO.insert :subjects, subject
-      redirect '/a/subjects'
+      unless params['name'].empty? || DAO.find(:subjects, name: params['name'])
+        subject = Subject.new params['name']
+        Scheduler::DAO.insert :subjects, subject
+        redirect '/a/subjects'
+      else
+        flash.now[:alert] = "Name can't be blank. Name should be unique."
+        @subjects = Scheduler::DAO.all :subjects
+        show :'a/subjects', nav_path: '/a/subjects'
+      end
+    end
+
+    delete '/a/subject/:id' do
+      Scheduler::DAO.delete :subjects, params[:id]
+    end
+
+    post '/a/user' do
+      unless params['name'].empty? || params['password'].empty? || DAO.find(:users, name: params['name'])
+        user = User.new params['name'], params['password'], params['role'].to_sym
+        Scheduler::DAO.insert :users, user
+        redirect '/a/users'
+      else
+        flash.now[:alert] = "Name and password can't be blank. Name should be unique."
+        @users = Scheduler::DAO.all :users
+        show :'a/users', nav_path: '/a/users'
+      end
     end
 
     get '/a/users' do
       @users = Scheduler::DAO.all :users
       show :'a/users'
-    end
-
-    post '/a/user' do
-      unless params['name'].empty? || params['password'].empty? || DAO.find(:users, name: name)
-        user = User.new params['name'], params['password'], params['role'].to_sym
-        Scheduler::DAO.insert :users, user
-      else
-        flash[:alert] = "Name and password can't be blank. Name should be unique."
-      end
-      redirect '/a/users'
     end
 
     delete '/a/user/:id' do

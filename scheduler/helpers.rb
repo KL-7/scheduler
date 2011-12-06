@@ -5,6 +5,7 @@ module Scheduler
     FLASH_CLASSES = { notice: :success, alert: :error }
 
     def show(template, options = {}, locals = {})
+      @nav_path = options.delete :nav_path
       haml template, options, locals
     end
 
@@ -33,7 +34,7 @@ module Scheduler
               { title: 'Home', path: '/' }
           ]
       end.map do |item|
-        item.merge active: item[:path] == request.path_info
+        item.merge active: item[:path] == (@nav_path || request.path_info)
       end
     end
 

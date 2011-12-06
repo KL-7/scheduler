@@ -2,7 +2,7 @@
   %div.clearfix.inline-input
     %label{ for: 'name' } Name:
     %div.input
-      %input{ name: "name", type: "text" }/
+      %input{ name: "name", type: "text", value: params['name'] }/
 
   %input.btn.primary{ type: "submit", value: "Create" }/
 
@@ -10,12 +10,16 @@
   %table.bordered-table
     %thead
       %th #
-      %th Name
+      %th{ width: 700 } Name
+      %th{ width: 100 } Actions
     %tbody
     - @subjects.each_with_index do |s, i|
       %tr
-        %th= i
+        %th= i + 1
         %td= s.name.empty? ? '&mdash;' : s.name
+        %td
+          %button.btn.delete-subject{ 'data-subject-id' => s.id } Delete
+
 
 - else
   No subjects.

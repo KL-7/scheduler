@@ -2,7 +2,7 @@
   %div.clearfix.inline-input
     %label{ for: 'name' } Name:
     %div.input
-      %input{ name: "name", type: "text" }/
+      %input{ name: "name", type: "text", value: params['name'] }/
 
   %div.clearfix.inline-input
     %label{ for: 'password' } Password:
@@ -14,7 +14,7 @@
     %div.input
       %select{ name: "role" }
         - User::ROLES.each do |role|
-          %option= role
+          %option{ selected: role.to_s == params['role'] }= role
 
   %input.btn.primary{ type: "submit", value: "Create" }/
 
@@ -28,7 +28,7 @@
     %tbody
     - @users.each_with_index do |u, i|
       %tr
-        %th= i
+        %th= i + 1
         %td= u.name.empty? ? '&mdash;' : u.name
         %td= u.role.empty? ? '&mdash;' : u.role
         %td

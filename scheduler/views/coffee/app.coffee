@@ -1,17 +1,16 @@
 $ ->
-#  $(".alert-message").alert()
   $('.content').delegate '.alert-message .close', 'click', ->
     $(this).closest('.alert-message').slideUp('fast', (-> $(this).remove()))
 
   $('button.delete-user').click ->
-    $.ajax({
-      url: '/a/user/' + $(this).data('userId'),
-      type: 'delete',
-      success: => $(this).closest('tr').fadeOut('fast', (-> $(this).remove()))
+    $.ajax({ url: '/a/user/' + $(this).data('userId'), type: 'delete', success: =>
+      $(this).closest('tr').fadeOut('fast', (-> $(this).remove()))
     });
 
   $('button.reset-user-password').click ->
-    $.ajax({
-      url: '/a/user/' + $(this).data('userId') + '/reset-password',
-      type: 'post'
+    $.ajax({ url: '/a/user/' + $(this).data('userId') + '/reset-password', type: 'post' });
+
+  $('button.delete-subject').click ->
+    $.ajax({ url: '/a/subject/' + $(this).data('subjectId'), type: 'delete', success: =>
+      $(this).closest('tr').fadeOut('fast', (-> $(this).remove()))
     });
