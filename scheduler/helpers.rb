@@ -18,6 +18,23 @@ module Scheduler
       @flash ||= {}
     end
 
+    def navigation
+      @navigation ||= case current_user.role
+        when :admin
+          [
+              { title: 'Home',     path: '/' },
+              { title: 'Users',    path: '/a/users' },
+              { title: 'Subjects', path: '/a/subjects' }
+          ]
+        else
+          [
+              { title: 'Home', path: '/' }
+          ]
+      end.map do |item|
+        item.merge active: item[:path] == request.path_info
+      end
+    end
+
   end
 
 end

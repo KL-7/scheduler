@@ -68,7 +68,7 @@ module Scheduler
 
     get '/login' do
       redirect '/' if current_user
-      show :login
+      show :login, layout: false
     end
 
     post '/login' do
@@ -78,7 +78,7 @@ module Scheduler
         redirect '/'
       else
         flash[:error] = 'Wrong email or password.'
-        show :login
+        show :login, layout: false
       end
     end
 

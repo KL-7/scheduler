@@ -1,5 +1,7 @@
 $ ->
-  $(".alert-message").alert()
+#  $(".alert-message").alert()
+  $('.content').delegate '.alert-message .close', 'click', ->
+    $(this).closest('.alert-message').slideUp('fast', (-> $(this).remove()))
 
   $('button.delete-user').click ->
     $.ajax({

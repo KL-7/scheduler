@@ -1,0 +1,5 @@
+- unless flash.empty?
+  - flash.each do |type, msg|
+    .alert-message{ class: type }
+      %a.close{ href: "#" } ×
+      %p= msg

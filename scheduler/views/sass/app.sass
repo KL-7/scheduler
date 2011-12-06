@@ -1,32 +1,52 @@
-#content
-  margin-top: 40px
+.content
+  width: 980px
+  margin: 45px auto 0
+  position: relative
 
-#user-block
+  & > .container
+    margin-top: 10px
+
+.user-block
   position: absolute
-  top: 10px
-  right: 20px
+  right: 14px
+  top: -31px
+  font-size: 14px
 
 .alert-message
-  width: 600px
-  margin: 0 auto
+  margin: 0 auto 10px
 
 table tbody
   td, th
     vertical-align: middle
 
+.container.well
+  table, form
+    background-color: white
+    border: 1px solid #DDD
+
 
 // login page
 
-form#login_form
-  margin: 60px auto 0
-  padding: 40px
-  width: 220px
+.login-page
+  width: 600px
+  margin-top: 80px
 
-  input[type=submit]
-    margin-top: 10px
-    width: 220px
-    font-size: 17px
-    height: 45px
+  .alert-message
+    width: 568px
+
+  & > .well
+    padding: 0
+
+    form#login_form
+      margin: 0 auto
+      padding: 20px 0 30px
+      width: 220px
+
+      input[type=submit]
+        margin-top: 10px
+        width: 220px
+        font-size: 17px
+        height: 45px
 
 
 // a/users page

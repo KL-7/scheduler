@@ -1,8 +1,1 @@
-Hello, #{current_user.name}! 
-%br
-You are #{current_user.role}. =)
-- if current_user.admin?
-  %br
-  %a{title: 'Edit users', href: '/a/users'} Users
-  %br
-  %a{title: 'Edit subjects', href: '/a/subjects'} Subjects
+%h2 Hello, #{current_user.name}!
