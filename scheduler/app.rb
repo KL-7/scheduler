@@ -68,7 +68,7 @@ module Scheduler
         Scheduler::DAO.insert :users, user
         redirect '/a/users'
       else
-        flash.now[:alert] = "Name should be unique. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
+        flash.now[:error] = "Name should be unique. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
         @users = Scheduler::DAO.all :users
         show :'a/users'
       end
