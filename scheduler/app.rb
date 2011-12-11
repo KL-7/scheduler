@@ -48,7 +48,7 @@ module Scheduler
         Scheduler::DAO.insert :subjects, subject
         redirect '/a/subjects'
       else
-        flash.now[:alert] = "Name can't be blank. Name should be unique."
+        flash.now[:error] = "Name can't be blank. Name should be unique."
         @subjects = Scheduler::DAO.all :subjects
         show :'a/subjects', nav_path: '/a/subjects'
       end
@@ -58,7 +58,7 @@ module Scheduler
       Scheduler::DAO.delete :subjects, params[:id]
     end
 
-    post '/a/user' do
+    post '/a/users' do
       name     = params['name'] || ''
       password = params['password'] || ''
       role     = params['role'] && params['role'].to_sym
@@ -70,7 +70,7 @@ module Scheduler
       else
         flash.now[:alert] = "Name should be unique. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
         @users = Scheduler::DAO.all :users
-        show :'a/users', nav_path: '/a/users'
+        show :'a/users'
       end
     end
 
@@ -84,9 +84,12 @@ module Scheduler
     end
 
     post '/a/user/:id/reset-password' do
-      u = Scheduler::DAO.find_by_id :users, params['id']
-      u.reset_password
+      u = DAO.find_by_id :users, params['id']
+      new_password = u.reset_password
       Scheduler::DAO.update :users, u
+
+      content_type :json
+      { password: new_password }.to_json
     end
 
     #### profile pages ####
@@ -105,9 +108,9 @@ module Scheduler
       if current_user.valid_password?(current_password) && new_password.size >= User::MINIMUM_PASSWORD_LENGTH
         current_user.password = new_password
         Scheduler::DAO.update :users, current_user
-        flash.now[:notice] = "Your password was successfully updated."
+        flash.now[:success] = "Your password was successfully updated."
       else
-        flash.now[:alert] = "Wrong current or new password. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
+        flash.now[:error] = "Wrong current or new password. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
       end
 
       show :profile
@@ -126,7 +129,7 @@ module Scheduler
         session['user_id'] = user.id
         redirect '/'
       else
-        flash.now[:alert] = 'Wrong username or password.'
+        flash.now[:error] = 'Wrong username or password.'
         show :login, layout: false
       end
     end

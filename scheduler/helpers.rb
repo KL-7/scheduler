@@ -2,7 +2,7 @@ module Scheduler
 
   module Helpers
 
-    FLASH_CLASSES = { notice: :success, alert: :error }
+    FLASH_CLASSES = [:success, :error]
 
     def show(template, options = {}, locals = {})
       @nav_path = options.delete :nav_path
@@ -10,7 +10,10 @@ module Scheduler
     end
 
     def login!(role = nil)
-      redirect '/login' unless current_user && (role.nil? || current_user.role == role)
+      return if current_user && (role.nil? || current_user.role == role)
+
+      flash[:error] = 'Sorry, but you should login first.'
+      redirect '/login'
     end
 
     def current_user

@@ -1,5 +1,6 @@
-- flash_classes.each do |type, css_class|
-  - if flash[type]
-    .alert-message{ class: css_class }
-      %a.close{ href: "#" } ×
-      %p= flash[type]
+%div#flash
+  - flash_classes.each do |type|
+    - if flash[type]
+      .alert-message{ class: type }
+        %a.close{ href: "#" } &times;
+        %p= flash[type]

@@ -14,6 +14,7 @@ gem 'therubyracer'
 
 gem 'activesupport'
 gem 'i18n'
+gem 'json'
 
 gem 'thin'
 
