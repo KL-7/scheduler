@@ -89,7 +89,7 @@ module Scheduler
       Scheduler::DAO.update :users, u
 
       content_type :json
-      { password: new_password }.to_json
+      { password: new_password, username: u.name }.to_json
     end
 
     #### profile pages ####

@@ -23,7 +23,7 @@ $ ->
       success: (data) =>
         $(this).enable()
         $(this).html 'Reset password'
-        $.flash 'success', "Password was successfully reseted to '" + data.password + "'."
+        $.flash 'success', "Password for " + data.username + " was successfully reset to '" + data.password + "'."
     });
 
   $('button.delete-subject').click ->
