@@ -30,7 +30,9 @@ module Scheduler
       login!
       show :root
     end
-    
+
+    #### admin pages ####
+
     before '/a/*' do
       login! :admin
     end
@@ -57,12 +59,16 @@ module Scheduler
     end
 
     post '/a/user' do
-      unless params['name'].empty? || params['password'].empty? || DAO.find(:users, name: params['name'])
-        user = User.new params['name'], params['password'], params['role'].to_sym
+      name     = params['name'] || ''
+      password = params['password'] || ''
+      role     = params['role'] && params['role'].to_sym
+
+      unless role.nil? || name.empty? || password.size < User::MINIMUM_PASSWORD_LENGTH || DAO.find(:users, name: name)
+        user = User.new name, password, role
         Scheduler::DAO.insert :users, user
         redirect '/a/users'
       else
-        flash.now[:alert] = "Name and password can't be blank. Name should be unique."
+        flash.now[:alert] = "Name should be unique. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
         @users = Scheduler::DAO.all :users
         show :'a/users', nav_path: '/a/users'
       end
@@ -82,6 +88,32 @@ module Scheduler
       u.reset_password
       Scheduler::DAO.update :users, u
     end
+
+    #### profile pages ####
+
+    get '/profile' do
+      login!
+      show :profile
+    end
+
+    post '/profile' do
+      login!
+
+      current_password = params['current_password'] || ''
+      new_password     = params['new_password'] || ''
+
+      if current_user.valid_password?(current_password) && new_password.size >= User::MINIMUM_PASSWORD_LENGTH
+        current_user.password = new_password
+        Scheduler::DAO.update :users, current_user
+        flash.now[:notice] = "Your password was successfully updated."
+      else
+        flash.now[:alert] = "Wrong current or new password. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
+      end
+
+      show :profile
+    end
+
+    #### auth ####
 
     get '/login' do
       redirect '/' if current_user

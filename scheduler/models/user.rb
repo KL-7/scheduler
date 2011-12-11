@@ -10,6 +10,10 @@ module Scheduler
 
       ROLES = [:student, :admin, :lecturer]
 
+      ROLE_METHOD_REGEXP = /^(#{ROLES.join('|')})\?$/
+
+      MINIMUM_PASSWORD_LENGTH = 6
+
       DEFAULT_PASSWORD = '111111'
 
       def initialize(name = nil, password = nil, role = :student)
@@ -53,7 +57,11 @@ module Scheduler
 
       def method_missing(*args, &block)
         # for every role defines method to check if the user has this role (e.g. admin? method for :admin role)
-        args.first.to_s =~ /^(#{ROLES.join('|')})\?$/ ? role.to_s == $1 : super
+        args.first.to_s =~ ROLE_METHOD_REGEXP ? role.to_s == $1 : super
+      end
+
+      def respond_to?(method)
+        !!(method =~ ROLE_METHOD_REGEXP) || super
       end
 
     end

@@ -1,0 +1,12 @@
+%form.form.well{ action: '/profile', method: 'post' }
+  %div.clearfix.inline-input
+    %label{ for: 'current_password' } Current password:
+    %div.input
+      %input{ name: "current_password", type: "password" }/
+
+  %div.clearfix.inline-input
+    %label{ for: 'new_password' } New password:
+    %div.input
+      %input{ name: "new_password", type: "password" }/
+
+  %input.btn.primary{ type: "submit", value: "Save" }/
