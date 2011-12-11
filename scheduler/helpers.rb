@@ -9,10 +9,10 @@ module Scheduler
       haml template, options, locals
     end
 
-    def login!(role = nil)
+    def login!(role = nil, alert = true)
       return if current_user && (role.nil? || current_user.role == role)
 
-      flash[:error] = 'Sorry, but you should login first.'
+      flash[:error] = 'Sorry, but you should login first.' if alert
       redirect '/login'
     end
 

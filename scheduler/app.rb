@@ -27,7 +27,7 @@ module Scheduler
     #### routes ####
 
     get '/' do
-      login!
+      login! nil, false
       show :root
     end
 
