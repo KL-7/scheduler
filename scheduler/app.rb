@@ -120,6 +120,10 @@ module Scheduler
       end
     end
 
+    delete '/l/course/:id' do
+      DAO.delete :courses, params[:id]
+    end
+
     #### profile pages ####
 
     get '/profile' do
