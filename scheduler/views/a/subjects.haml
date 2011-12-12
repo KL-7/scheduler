@@ -18,8 +18,7 @@
         %th= i + 1
         %td= s.name.empty? ? '&mdash;' : s.name
         %td
-          %button.btn.delete-subject{ 'data-subject-id' => s.id } Delete
-
+          %button.btn.delete-record{ 'data-record-id' => s.id, 'data-delete-path' => '/a/subject' } Delete
 
 - else
   No subjects.

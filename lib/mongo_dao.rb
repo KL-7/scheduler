@@ -11,8 +11,12 @@ class MongoDAO
     objectify(coll, @db[coll].find_one(*args))
   end
 
-  def find_by_id(coll, id)
-    find(coll, _id: BSON::ObjectId(id)) if BSON::ObjectId.legal?(id)
+  def find_by_id(coll, ids)
+    if ids.is_a? Array
+      all(coll, _id: { '$in' => ids.uniq.map{ |id| BSON::ObjectId(id) if BSON::ObjectId.legal?(id) }.compact })
+    else
+      find(coll, _id: BSON::ObjectId(ids)) if BSON::ObjectId.legal?(ids)
+    end
   end
 
   def all(coll, *args)
@@ -30,6 +34,16 @@ class MongoDAO
 
   def delete(coll, id)
     @db[coll].remove({ _id: BSON::ObjectId(id) }) if BSON::ObjectId.legal?(id)
+  end
+
+  def load_one_to_one_association(children, association_name)
+    parent_coll = association_name.to_s.pluralize.to_sym
+    association_id = "#{association_name}_id"
+
+    ids = children.map { |c| c.send(association_id) }
+
+    parents_map = find_by_id(parent_coll, ids).each_with_object({}) { |p, memo| memo[p.id] = p }
+    children.each { |c| c.send "#{association_name}=", parents_map[c.send(association_id)] }
   end
 
   protected

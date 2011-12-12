@@ -92,6 +92,34 @@ module Scheduler
       { password: new_password, username: u.name }.to_json
     end
 
+    #### lecturer pages ####
+
+    before '/l/*' do
+      login! :lecturer
+    end
+
+    get '/l/courses' do
+      @subjects = DAO.all :subjects
+      @courses = DAO.load_one_to_one_association(DAO.all(:courses), :subject)
+      show :'l/courses'
+    end
+
+    post '/l/courses' do
+      name = params['name'] || ''
+      subject = DAO.find_by_id :subjects, params['subject_id']
+
+      unless name.empty? || subject.nil? || DAO.find(:courses, lecturer_id: current_user.id, name: name)
+        course = Course.new current_user.id, subject.id, name
+        DAO.insert :courses, course
+        redirect '/l/courses'
+      else
+        flash.now[:error] = "Name should be unique for current lecturer."
+        @subjects = DAO.all :subjects
+        @courses = DAO.load_one_to_one_association(DAO.all(:courses), :subject)
+        show :'l/courses'
+      end
+    end
+
     #### profile pages ####
 
     get '/profile' do

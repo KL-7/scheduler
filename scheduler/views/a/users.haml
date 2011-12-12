@@ -33,7 +33,7 @@
           %td= u.role.empty? ? '&mdash;' : u.role
           %td
             - unless u.id == current_user.id
-              %button.btn.delete-user{ 'data-user-id' => u.id } Delete
+              %button.btn.delete-record{ 'data-record-id' => u.id, 'data-delete-path' => '/a/user' } Delete
             %button.btn.reset-user-password{ 'data-user-id' => u.id } Reset password
 
 - else
