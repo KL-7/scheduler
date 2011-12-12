@@ -36,14 +36,17 @@ class MongoDAO
     @db[coll].remove({ _id: BSON::ObjectId(id) }) if BSON::ObjectId.legal?(id)
   end
 
-  def load_one_to_one_association(children, association_name)
-    parent_coll = association_name.to_s.pluralize.to_sym
-    association_id = "#{association_name}_id"
+  def load_one_to_one_association(records, association_name)
+    records.tap do |children|
+      children = Array(children)
+      parent_coll = association_name.to_s.pluralize.to_sym
+      association_id = "#{association_name}_id"
 
-    ids = children.map { |c| c.send(association_id) }
+      ids = children.map { |c| c.send(association_id) }
 
-    parents_map = find_by_id(parent_coll, ids).each_with_object({}) { |p, memo| memo[p.id] = p }
-    children.each { |c| c.send "#{association_name}=", parents_map[c.send(association_id)] }
+      parents_map = find_by_id(parent_coll, ids).each_with_object({}) { |p, memo| memo[p.id] = p }
+      children.each { |c| c.send "#{association_name}=", parents_map[c.send(association_id)] }
+    end
   end
 
   protected
