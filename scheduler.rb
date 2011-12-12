@@ -4,6 +4,8 @@ require 'rubygems'
 require 'bundler'
 Bundler.require
 
+require 'pry' unless Sinatra::Application.production?
+
 require 'lib/mongo_dao'
 require 'lib/mongo_fields'
 

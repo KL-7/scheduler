@@ -38,24 +38,24 @@ module Scheduler
     end
 
     get '/a/subjects' do
-      @subjects = Scheduler::DAO.all :subjects
+      @subjects = DAO.all :subjects
       show :'a/subjects'
     end
 
     post '/a/subject' do
       unless params['name'].empty? || DAO.find(:subjects, name: params['name'])
         subject = Subject.new params['name']
-        Scheduler::DAO.insert :subjects, subject
+        DAO.insert :subjects, subject
         redirect '/a/subjects'
       else
         flash.now[:error] = "Name can't be blank. Name should be unique."
-        @subjects = Scheduler::DAO.all :subjects
+        @subjects = DAO.all :subjects
         show :'a/subjects', nav_path: '/a/subjects'
       end
     end
 
     delete '/a/subject/:id' do
-      Scheduler::DAO.delete :subjects, params[:id]
+      DAO.delete :subjects, params[:id]
     end
 
     post '/a/users' do
@@ -65,28 +65,28 @@ module Scheduler
 
       unless role.nil? || name.empty? || password.size < User::MINIMUM_PASSWORD_LENGTH || DAO.find(:users, name: name)
         user = User.new name, password, role
-        Scheduler::DAO.insert :users, user
+        DAO.insert :users, user
         redirect '/a/users'
       else
         flash.now[:error] = "Name should be unique. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
-        @users = Scheduler::DAO.all :users
+        @users = DAO.all :users
         show :'a/users'
       end
     end
 
     get '/a/users' do
-      @users = Scheduler::DAO.all :users
+      @users = DAO.all :users
       show :'a/users'
     end
 
     delete '/a/user/:id' do
-      Scheduler::DAO.delete :users, params[:id]
+      DAO.delete :users, params[:id]
     end
 
     post '/a/user/:id/reset-password' do
       u = DAO.find_by_id :users, params['id']
       new_password = u.reset_password
-      Scheduler::DAO.update :users, u
+      DAO.update :users, u
 
       content_type :json
       { password: new_password, username: u.name }.to_json
@@ -107,7 +107,7 @@ module Scheduler
 
       if current_user.valid_password?(current_password) && new_password.size >= User::MINIMUM_PASSWORD_LENGTH
         current_user.password = new_password
-        Scheduler::DAO.update :users, current_user
+        DAO.update :users, current_user
         flash.now[:success] = "Your password was successfully updated."
       else
         flash.now[:error] = "Wrong current or new password. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
