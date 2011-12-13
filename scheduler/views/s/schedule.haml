@@ -1,0 +1,35 @@
+%form.form.well{ action: '/s/schedule', method: 'post' }
+  %div.clearfix.inline-input
+    %label{ for: 'course_id' } Course:
+    %div.input
+      %select{ name: "course_id" }
+        - @courses.each do |course|
+          %option{ selected: course.id == params['course_id'], value: course.id }= course.name
+
+  %div.clearfix.inline-input
+    %label{ for: 'course_type' } Course type:
+    %div.input
+      %select{ name: "course_type" }
+        - Schedule::COURSE_TYPES.each do |course_type|
+          %option{ value: course_type, selected: course_type.to_s == params['course_type'].to_s }= course_type.to_s.capitalize
+
+  %input.btn.primary{ type: "submit", value: "Attend" }/
+
+- unless @schedule.items.empty?
+  %table.bordered-table
+    %thead
+      %th #
+      %th{ width: 400 } Course name
+      %th{ width: 50  } Type
+      %th{ width: 100 } Actions
+    %tbody
+    - @schedule.items.each_with_index do |item, i|
+      %tr
+        %th= i + 1
+        %td= item['course'].name.empty? ? '&mdash;' : item['course'].name
+        %td= item['type']
+        %td
+          %button.btn.delete-record{ 'data-record-id' => item['course_id'], 'data-delete-path' => '/s/schedule' } Remove
+
+- else
+  Schedule is empty.

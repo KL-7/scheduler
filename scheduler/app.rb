@@ -55,7 +55,7 @@ module Scheduler
     end
 
     delete '/a/subject/:id' do
-      DAO.delete :subjects, params[:id]
+      DAO.delete_by_id :subjects, params[:id]
     end
 
     post '/a/users' do
@@ -66,6 +66,7 @@ module Scheduler
       unless role.nil? || name.empty? || password.size < User::MINIMUM_PASSWORD_LENGTH || DAO.find(:users, name: name)
         user = User.new name, password, role
         DAO.insert :users, user
+        DAO.insert :schedules, Schedule.new(user.id)
         redirect '/a/users'
       else
         flash.now[:error] = "Name should be unique. Password should be at least #{User::MINIMUM_PASSWORD_LENGTH} characters long."
@@ -80,7 +81,8 @@ module Scheduler
     end
 
     delete '/a/user/:id' do
-      DAO.delete :users, params[:id]
+      DAO.delete_by_id :users, params[:id]
+      DAO.delete :schedules, { student_id: params[:id] }
     end
 
     post '/a/user/:id/reset-password' do
@@ -121,7 +123,33 @@ module Scheduler
     end
 
     delete '/l/course/:id' do
-      DAO.delete :courses, params[:id]
+      DAO.delete_by_id :courses, params[:id]
+    end
+
+    #### students pages ####
+
+    before '/s/*' do
+      login! :student
+    end
+
+    get '/s/schedule' do
+      @courses = DAO.all(:courses)
+      @schedule = DAO.find(:schedules, { student_id: current_user.id }) || Schedule.new(current_user.id)
+      @schedule.load_courses
+      show :'/s/schedule'
+    end
+
+    post '/s/schedule' do
+      @schedule = DAO.find(:schedules, { student_id: current_user.id }) || Schedule.new(current_user.id)
+      if @schedule.add_course params['course_id'], params['course_type'].to_sym
+        DAO.update :schedules, @schedule
+        redirect '/s/schedule'
+      else
+        @courses = DAO.all(:courses)
+        @schedule.load_courses
+        flash.now[:error] = 'Failed to add course to schedule.'
+        show :'/s/schedule'
+      end
     end
 
     #### profile pages ####

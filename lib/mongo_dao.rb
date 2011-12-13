@@ -32,8 +32,12 @@ class MongoDAO
     @db[coll].update({ _id: hash[:_id] }, hash)
   end
 
-  def delete(coll, id)
+  def delete_by_id(coll, id)
     @db[coll].remove({ _id: BSON::ObjectId(id) }) if BSON::ObjectId.legal?(id)
+  end
+
+  def delete(coll, *args)
+    @db[coll].remove(*args)
   end
 
   def load_one_to_one_association(records, association_name)
