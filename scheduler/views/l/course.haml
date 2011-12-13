@@ -1,0 +1,18 @@
+%h3.course-name
+  = "#{@course.name.capitalize}"
+  %span= "(#{@course.subject.name.downcase})"
+
+- unless @course.students.empty?
+  %h5 Students list:
+  %table.bordered-table
+    %thead
+      %th{ width: 40 } #
+      %th Name
+    %tbody
+    - @course.students.each_with_index do |s, i|
+      %tr
+        %th= i + 1
+        %td= s.name.empty? ? '&mdash;' : s.name
+
+- else
+  No students signed up for that course.

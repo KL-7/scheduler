@@ -14,6 +14,21 @@ module Scheduler
         self.name = name
       end
 
+      def students
+        @students || students!
+      end
+
+      def students!
+        @students = DAO.find_by_id(
+            :users,
+            DAO.all(
+                :schedules,
+                { items_list: { '$elemMatch' => { course_id: id } } },
+                fields: [:student_id]
+            ).map(&:student_id)
+        )
+      end
+
     end
   end
 end

@@ -126,6 +126,11 @@ module Scheduler
       DAO.delete_by_id :courses, params[:id]
     end
 
+    get '/l/course/:id' do
+      @course = DAO.load_one_to_one_association(DAO.find_by_id(:courses, params['id']), :subject)
+      show :'/l/course'
+    end
+
     #### students pages ####
 
     before '/s/*' do

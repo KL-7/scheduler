@@ -1,4 +1,4 @@
-%form.form.well{ action: '/l/courses', method: 'post' }
+%form.well{ action: '/l/courses', method: 'post' }
   %div.clearfix.inline-input
     %label{ for: 'name' } Name:
     %div.input
@@ -24,7 +24,8 @@
     - @courses.each_with_index do |c, i|
       %tr
         %th= i + 1
-        %td= c.name.empty? ? '&mdash;' : c.name
+        %td
+          %a{ href: "/l/course/#{c.id}" }= c.name
         %td= c.subject && c.subject.name || '&mdash;'
         %td
           %button.btn.delete-record{ 'data-record-id' => c.id, 'data-delete-path' => '/l/course' } Delete
