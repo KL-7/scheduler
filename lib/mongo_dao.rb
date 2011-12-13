@@ -32,6 +32,10 @@ class MongoDAO
     @db[coll].update({ _id: hash[:_id] }, hash)
   end
 
+  def save(coll, doc)
+    doc.id.nil? ? insert(coll, doc) : update(coll, doc)
+  end
+
   def delete_by_id(coll, id)
     @db[coll].remove({ _id: BSON::ObjectId(id) }) if BSON::ObjectId.legal?(id)
   end

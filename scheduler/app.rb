@@ -135,20 +135,25 @@ module Scheduler
     get '/s/schedule' do
       @courses = DAO.all(:courses)
       @schedule = DAO.find(:schedules, { student_id: current_user.id }) || Schedule.new(current_user.id)
-      @schedule.load_courses
       show :'/s/schedule'
     end
 
     post '/s/schedule' do
       @schedule = DAO.find(:schedules, { student_id: current_user.id }) || Schedule.new(current_user.id)
-      if @schedule.add_course params['course_id'], params['course_type'].to_sym
-        DAO.update :schedules, @schedule
+      if @schedule.add_course(params['course_id'], params['course_type'].to_sym)
+        DAO.save :schedules, @schedule
         redirect '/s/schedule'
       else
         @courses = DAO.all(:courses)
-        @schedule.load_courses
         flash.now[:error] = 'Failed to add course to schedule.'
         show :'/s/schedule'
+      end
+    end
+
+    delete '/s/schedule/:id' do
+      if @schedule = DAO.find(:schedules, { student_id: current_user.id })
+        @schedule.remove_course(params['id'])
+        DAO.update :schedules, @schedule
       end
     end
 
