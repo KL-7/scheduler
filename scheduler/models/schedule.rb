@@ -48,6 +48,7 @@ module Scheduler
       def items!
         schedule_items = items_list.map { |c| ScheduleItem.new(c['course_id'], c['course_type']) }
         @items = DAO.load_associations(schedule_items, :course)
+        DAO.load_associations(@items.map(&:course), lecturer: :users)
       end
 
     end

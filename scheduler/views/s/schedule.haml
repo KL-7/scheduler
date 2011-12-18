@@ -19,14 +19,16 @@
   %table.bordered-table
     %thead
       %th #
-      %th{ width: 600 } Course name
+      %th{ width: 400 } Course name
+      %th{ width: 200 } Lecturer
       %th{ width: 100  } Type
       %th{ width: 100 } Actions
     %tbody
     - @schedule.items.each_with_index do |item, i|
       %tr
         %th= i + 1
-        %td= item.course.name.empty? ? '&mdash;' : item.course.name
+        %td= item.course.name
+        %td= item.course.lecturer.name
         %td= item.course_type
         %td
           %button.btn.delete-record{ 'data-record-id' => item.course_id, 'data-delete-path' => '/s/schedule' } Delete
