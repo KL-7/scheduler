@@ -7,20 +7,26 @@ class MongoDAO
     @models_module = models_module
   end
 
-  def find(coll, *args)
-    objectify(coll, @db[coll].find_one(*args))
-  end
-
-  def find_by_id(coll, ids)
-    if ids.is_a? Array
-      all(coll, _id: { '$in' => ids.uniq.map{ |id| BSON::ObjectId(id) if BSON::ObjectId.legal?(id) }.compact })
-    else
-      find(coll, _id: BSON::ObjectId(ids)) if BSON::ObjectId.legal?(ids)
+  def find(coll, spec_or_object_id = nil, opts = {})
+    with_associations(opts.delete(:include)) do
+      objectify(coll, @db[coll].find_one(spec_or_object_id, opts))
     end
   end
 
-  def all(coll, *args)
-    objectify(coll, @db[coll].find(*args).to_a || [])
+  def find_by_id(coll, ids, opts = {})
+    with_associations(opts.delete(:include)) do
+      if ids.is_a? Array
+        all(coll, _id: { '$in' => ids.uniq.map{ |id| BSON::ObjectId(id) if BSON::ObjectId.legal?(id) }.compact })
+      else
+        find(coll, _id: BSON::ObjectId(ids)) if BSON::ObjectId.legal?(ids)
+      end
+    end
+  end
+
+  def all(coll, selector = {}, opts = {})
+    with_associations(opts.delete(:include)) do
+      objectify(coll, @db[coll].find(selector, opts).to_a || [])
+    end
   end
 
   def insert(coll, *args)
@@ -44,20 +50,45 @@ class MongoDAO
     @db[coll].remove(*args)
   end
 
-  def load_one_to_one_association(records, association_name)
-    records.tap do |children|
-      children = Array(children)
-      parent_coll = association_name.to_s.pluralize.to_sym
-      association_id = "#{association_name}_id"
-
-      ids = children.map { |c| c.send(association_id) }
-
-      parents_map = find_by_id(parent_coll, ids).each_with_object({}) { |p, memo| memo[p.id] = p }
-      children.each { |c| c.send "#{association_name}=", parents_map[c.send(association_id)] }
+  def load_associations(records, associations)
+    case associations
+    when Array
+      associations.each { |assoc| load_one_to_one_association records, assoc }
+    when Hash
+      associations.each { |assoc, coll| load_one_to_one_association records, assoc, coll }
+    when Symbol, String
+      load_one_to_one_association records, associations.to_sym
+    else
+      raise ArgumentError, "associations argument should be an array, a hash, a string, or a symbol"
     end
+
+    records
   end
 
   protected
+
+  def load_one_to_one_association(records, assoc_name, assoc_collection = nil)
+    records.tap do |children|
+      children = Array(children)
+      parent_coll = assoc_collection || assoc_name.to_s.pluralize.to_sym
+      assoc_id = "#{assoc_name}_id"
+
+      ids = children.map { |c| c.send(assoc_id) }
+
+      parents_map = find_by_id(parent_coll, ids).each_with_object({}) { |p, memo| memo[p.id] = p }
+      children.each { |c| c.send "#{assoc_name}=", parents_map[c.send(assoc_id)] }
+    end
+  end
+
+  def with_associations(associations)
+    if associations
+      yield.tap do |result|
+        load_associations result, associations
+      end
+    else
+      yield
+    end
+  end
 
   def collection_class(coll)
     return unless coll

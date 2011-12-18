@@ -1,0 +1,17 @@
+- unless @courses.empty?
+  %table.bordered-table
+    %thead
+      %th #
+      %th{ width: 400 } Title
+      %th{ width: 300 } Subject
+      %th{ width: 200 } Lecturer
+    %tbody
+    - @courses.each_with_index do |c, i|
+      %tr
+        %th= i + 1
+        %td= c.name
+        %td= c.subject && c.subject.name || '&mdash;'
+        %td= c.lecturer.name
+
+- else
+  No courses.

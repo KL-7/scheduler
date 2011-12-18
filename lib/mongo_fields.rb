@@ -42,7 +42,7 @@ module MongoFields
   def to_mongo_hash
     self.class.mongo_fields.inject({}){ |m, k| m.merge k => send(k) }.tap do |h|
       id = h.delete :id
-      h.merge!(:_id => BSON::ObjectId(id)) if BSON::ObjectId.legal?(id)
+      h.merge!(_id: BSON::ObjectId(id)) if BSON::ObjectId.legal?(id)
     end
   end
 

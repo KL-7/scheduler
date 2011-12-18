@@ -11,6 +11,9 @@ module Scheduler
 
       COURSE_TYPES = [:primary, :alternative]
 
+      PRIMARY_COURSES_LIMIT = 4
+      ALTERNATIVE_COURSES_LIMIT = 2
+
       def initialize(student_id = nil)
         self.student_id = student_id
         self.items_list = []
@@ -44,7 +47,7 @@ module Scheduler
 
       def items!
         schedule_items = items_list.map { |c| ScheduleItem.new(c['course_id'], c['course_type']) }
-        @items = DAO.load_one_to_one_association(schedule_items, :course)
+        @items = DAO.load_associations(schedule_items, :course)
       end
 
     end

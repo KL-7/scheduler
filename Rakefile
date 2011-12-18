@@ -1,5 +1,5 @@
 desc "Default: run thin"
-task :default => :start
+task default: :start
 
 desc "Start thin server"
 task :start do

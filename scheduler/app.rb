@@ -18,7 +18,7 @@ module Scheduler
 
     include Scheduler::Models
 
-    use Rack::Flash, :sweep => true
+    use Rack::Flash, sweep: true
     use SassHandler
     use CoffeeHandler
     helpers Helpers
@@ -102,7 +102,7 @@ module Scheduler
 
     get '/l/courses' do
       @subjects = DAO.all :subjects
-      @courses = DAO.load_one_to_one_association(DAO.all(:courses), :subject)
+      @courses = DAO.all(:courses, { lecturer_id: current_user.id }, include: :subject)
       show :'l/courses'
     end
 
@@ -117,7 +117,7 @@ module Scheduler
       else
         flash.now[:error] = "Name should be unique for current lecturer."
         @subjects = DAO.all :subjects
-        @courses = DAO.load_one_to_one_association(DAO.all(:courses), :subject)
+        @courses = DAO.all(:courses, {}, include: :subject)
         show :'l/courses'
       end
     end
@@ -127,7 +127,7 @@ module Scheduler
     end
 
     get '/l/course/:id' do
-      @course = DAO.load_one_to_one_association(DAO.find_by_id(:courses, params['id']), :subject)
+      @course = DAO.find_by_id(:courses, params['id'], include: subject)
       show :'/l/course'
     end
 
@@ -160,6 +160,11 @@ module Scheduler
         @schedule.remove_course(params['id'])
         DAO.update :schedules, @schedule
       end
+    end
+
+    get '/s/courses' do
+      @courses = DAO.all(:courses, {}, include: { subject: :subjects, lecturer: :users })
+      show :'/s/courses'
     end
 
     #### profile pages ####

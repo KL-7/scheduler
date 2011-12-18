@@ -8,6 +8,9 @@ module Scheduler
 
       attr_accessor :lecturer, :subject
 
+      MIN_STUDENTS_LIMIT = 10
+      MAX_STUDENTS_LIMIT = 20
+
       def initialize(lecturer_id = nil, subject_id = nil, name = nil)
         self.lecturer_id = lecturer_id
         self.subject_id = subject_id
@@ -27,6 +30,9 @@ module Scheduler
                 fields: [:student_id]
             ).map(&:student_id)
         )
+      end
+
+      def status
       end
 
     end

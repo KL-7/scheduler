@@ -1,6 +1,6 @@
 %form.well{ action: '/l/courses', method: 'post' }
   %div.clearfix.inline-input
-    %label{ for: 'name' } Name:
+    %label{ for: 'name' } Title:
     %div.input
       %input{ name: "name", type: "text", value: params['name'] }/
 
@@ -17,7 +17,7 @@
   %table.bordered-table
     %thead
       %th #
-      %th{ width: 400 } Name
+      %th{ width: 400 } Title
       %th{ width: 300 } Subject
       %th{ width: 100 } Actions
     %tbody

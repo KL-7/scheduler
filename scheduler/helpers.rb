@@ -37,7 +37,8 @@ module Scheduler
           ]
         when :student
           [
-              { title: 'Schedule', path: '/s/schedule' }
+              { title: 'Schedule', path: '/s/schedule' },
+              { title: 'Courses', path: '/s/courses' }
           ]
         else []
       end.unshift({ title: 'Home', path: '/' }).map do |item|
