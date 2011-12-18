@@ -2,16 +2,18 @@
   %table.bordered-table
     %thead
       %th #
-      %th{ width: 400 } Title
-      %th{ width: 300 } Subject
+      %th{ width: 300 } Title
+      %th{ width: 200 } Subject
       %th{ width: 200 } Lecturer
+      %th{ width: 60 } Students
     %tbody
     - @courses.each_with_index do |c, i|
       %tr
         %th= i + 1
         %td= c.name
-        %td= c.subject && c.subject.name || '&mdash;'
+        %td= c.subject.name
         %td= c.lecturer.name
+        %td= c.students_count
 
 - else
   No courses.

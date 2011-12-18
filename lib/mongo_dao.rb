@@ -50,6 +50,10 @@ class MongoDAO
     @db[coll].remove(*args)
   end
 
+  def collection(name)
+    @db[name]
+  end
+
   def load_associations(records, associations)
     case associations
     when Array

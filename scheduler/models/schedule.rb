@@ -29,16 +29,16 @@ module Scheduler
       end
 
       def remove_course(course_id)
-        if index = items_list.index { |c| c['course_id'] == course_id }
-          items_list.delete_at index
-          true
-        else
-          false
-        end
+        index = items_list.index { |c| c['course_id'] == course_id }
+        items_list.delete_at(index) if index
       end
 
       def include_course?(course_id)
         !!items_list.detect { |c| c['course_id'] == course_id }
+      end
+
+      def course_type(course_id)
+        items_list.detect{ |c| c['course_id'] == course_id }['course_type']
       end
 
       def items

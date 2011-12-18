@@ -138,27 +138,37 @@ module Scheduler
     end
 
     get '/s/schedule' do
-      @courses = DAO.all(:courses)
+      @courses = Course.available_courses
       @schedule = DAO.find(:schedules, { student_id: current_user.id }) || Schedule.new(current_user.id)
       show :'/s/schedule'
     end
 
     post '/s/schedule' do
       @schedule = DAO.find(:schedules, { student_id: current_user.id }) || Schedule.new(current_user.id)
-      if @schedule.add_course(params['course_id'], params['course_type'].to_sym)
+
+      course_id = params['course_id']
+      course_type = params['course_type'].to_sym
+
+      if @schedule.add_course(course_id, course_type) && Course.add_student(course_id, course_type)
         DAO.save :schedules, @schedule
         redirect '/s/schedule'
       else
+        # reload original schedule
+        @schedule = DAO.find(:schedules, { student_id: current_user.id }) || Schedule.new(current_user.id)
         @courses = DAO.all(:courses)
-        flash.now[:error] = 'Failed to add course to schedule.'
+        flash.now[:error] = 'Failed to add course to your schedule.'
         show :'/s/schedule'
       end
     end
 
     delete '/s/schedule/:id' do
-      if @schedule = DAO.find(:schedules, { student_id: current_user.id })
-        @schedule.remove_course(params['id'])
-        DAO.update :schedules, @schedule
+      @schedule = DAO.find(:schedules, { student_id: current_user.id })
+      course_id = params['id']
+      schedule_item = @schedule.remove_course(course_id)
+
+      if schedule_item
+        DAO.save :schedules, @schedule
+        Course.remove_student(course_id, schedule_item['course_type'])
       end
     end
 
