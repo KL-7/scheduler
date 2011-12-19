@@ -17,8 +17,9 @@
   %table.bordered-table
     %thead
       %th #
-      %th{ width: 400 } Title
+      %th{ width: 320 } Title
       %th{ width: 300 } Subject
+      %th{ width: 80 } Students
       %th{ width: 100 } Actions
     %tbody
     - @courses.each_with_index do |c, i|
@@ -26,7 +27,8 @@
         %th= i + 1
         %td
           %a{ href: "/l/course/#{c.id}" }= c.name
-        %td= c.subject && c.subject.name || '&mdash;'
+        %td= c.subject.name
+        %td= c.students_count
         %td
           %button.btn.delete-record{ 'data-record-id' => c.id, 'data-delete-path' => '/l/course' } Delete
 

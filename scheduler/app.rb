@@ -101,8 +101,8 @@ module Scheduler
     end
 
     get '/l/courses' do
-      @subjects = DAO.all :subjects
-      @courses = DAO.all(:courses, { lecturer_id: current_user.id }, include: :subject)
+      @subjects = DAO.all(:subjects).sort_by(&:name)
+      @courses = DAO.all(:courses, { lecturer_id: current_user.id }, include: :subject).sort_by(&:name)
       show :'l/courses'
     end
 
@@ -127,7 +127,7 @@ module Scheduler
     end
 
     get '/l/course/:id' do
-      @course = DAO.find_by_id(:courses, params['id'], include: subject)
+      @course = DAO.find_by_id(:courses, params['id'], include: :subject)
       show :'/l/course'
     end
 
@@ -138,7 +138,7 @@ module Scheduler
     end
 
     get '/s/schedule' do
-      @courses = Course.available_courses
+      @courses = Course.available_courses.sort_by(&:name)
       @schedule = DAO.find(:schedules, { student_id: current_user.id }) || Schedule.new(current_user.id)
       show :'/s/schedule'
     end
@@ -173,7 +173,7 @@ module Scheduler
     end
 
     get '/s/courses' do
-      @courses = DAO.all(:courses, {}, include: { subject: :subjects, lecturer: :users })
+      @courses = DAO.all(:courses, {}, include: { subject: :subjects, lecturer: :users }).sort_by(&:name)
       show :'/s/courses'
     end
 

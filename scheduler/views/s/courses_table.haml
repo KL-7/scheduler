@@ -1,0 +1,23 @@
+%div.courses-table
+  %h3.table-title
+    = "#{courses_type.to_s.capitalize} courses"
+    %span= "(at most #{Schedule::COURSE_LIMITS[courses_type]} courses)"
+
+  - unless items.empty?
+    %table.bordered-table
+      %thead
+        %th #
+        %th{ width: 400 } Course name
+        %th{ width: 300 } Lecturer
+        %th{ width: 100 } Actions
+      %tbody
+      - items.each_with_index do |item, i|
+        %tr
+          %th= i + 1
+          %td= item.course.name
+          %td= item.course.lecturer.name
+          %td
+            %button.btn.delete-record{ 'data-record-id' => item.course_id, 'data-delete-path' => '/s/schedule' } Delete
+
+  - else
+    %div.empty-table= "There are no #{courses_type} courses in your schedule."

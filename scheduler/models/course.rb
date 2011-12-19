@@ -30,7 +30,7 @@ module Scheduler
                 { items_list: { '$elemMatch' => { course_id: id } } },
                 fields: [:student_id]
             ).map(&:student_id)
-        )
+        ).sort_by(&:name)
       end
 
       class << self
@@ -40,7 +40,7 @@ module Scheduler
         end
 
         def add_student(course_id, course_type)
-          if !Schedule::COURSE_TYPES.include?(course_type)
+          if !Schedule.valid_course_type?(course_type)
             false
           elsif course_type != :primary
             true
@@ -56,7 +56,7 @@ module Scheduler
         end
 
         def remove_student(course_id, course_type)
-          if !Schedule::COURSE_TYPES.include?(course_type)
+          if !Schedule.valid_course_type?(course_type)
             false
           elsif course_type != :primary
             true

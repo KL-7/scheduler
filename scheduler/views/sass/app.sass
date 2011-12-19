@@ -24,6 +24,11 @@ table tbody
     background-color: white
     border: 1px solid #DDD
 
+h3.table-title
+  margin: -10px 0 10px
+
+  span
+    color: lighten(#000, 50%)
 
 // login page
 
@@ -66,10 +71,14 @@ table tbody
   input, select
     width: 160px
 
-// l/course page
+// s/schedule page
 
-h3.course-name
-  margin: -10px 0 10px
+.courses
+  .courses-table
+    margin-bottom: 30px
 
-  span
-    color: lighten(#000, 50%)
+    &:last-child
+      margin-bottom: 5px
+
+    .bordered-table
+      margin-bottom: 0

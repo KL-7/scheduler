@@ -11,8 +11,7 @@ module Scheduler
 
       COURSE_TYPES = [:primary, :alternative]
 
-      PRIMARY_COURSES_LIMIT = 4
-      ALTERNATIVE_COURSES_LIMIT = 2
+      COURSE_LIMITS = { primary: 4, alternative: 2 }
 
       def initialize(student_id = nil)
         self.student_id = student_id
@@ -20,12 +19,14 @@ module Scheduler
       end
       
       def add_course(course_id, course_type)
-        if COURSE_TYPES.include?(course_type) && !include_course?(course_id)
+        return false unless self.class.valid_course_type?(course_type)
+
+        if !include_course?(course_id) && courses_count(course_type) < COURSE_LIMITS[course_type]
           items_list << { 'course_id' => course_id, 'course_type' => course_type }
-          true
-        else
-          false
+          return true
         end
+
+        false
       end
 
       def remove_course(course_id)
@@ -41,14 +42,37 @@ module Scheduler
         items_list.detect{ |c| c['course_id'] == course_id }['course_type']
       end
 
-      def items
-        @items || items!
+      def courses_count(course_type = nil)
+        if self.class.valid_course_type?(course_type)
+          items_list.count { |c| c['course_type'] == course_type }
+        else
+          items_list.size
+        end
       end
 
-      def items!
-        schedule_items = items_list.map { |c| ScheduleItem.new(c['course_id'], c['course_type']) }
-        @items = DAO.load_associations(schedule_items, :course)
+      def items(course_type = nil)
+        filter_items(@items || items!, course_type)
+      end
+
+      def items!(course_type = nil)
+        filter_items(init_items, course_type)
+      end
+
+      def self.valid_course_type?(course_type)
+        COURSE_TYPES.include? course_type
+      end
+
+      private
+
+      def init_items
+        @items = items_list.map { |c| ScheduleItem.new(c['course_id'], c['course_type']) }
+        DAO.load_associations(@items, :course)
         DAO.load_associations(@items.map(&:course), lecturer: :users)
+        @items.sort_by! { |i| i.course.name }
+      end
+
+      def filter_items(items, course_type)
+        self.class.valid_course_type?(course_type) ? items.select { |i| i.course_type == course_type } : items
       end
 
     end
