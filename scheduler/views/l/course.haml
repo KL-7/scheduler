@@ -12,7 +12,7 @@
     - @course.students.each_with_index do |s, i|
       %tr
         %th= i + 1
-        %td= s.name.empty? ? '&mdash;' : s.name
+        %td= s.name
 
 - else
   No students signed up for that course.

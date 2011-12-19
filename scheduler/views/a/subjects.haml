@@ -16,7 +16,7 @@
     - @subjects.each_with_index do |s, i|
       %tr
         %th= i + 1
-        %td= s.name.empty? ? '&mdash;' : s.name
+        %td= s.name
         %td
           %button.btn.delete-record{ 'data-record-id' => s.id, 'data-delete-path' => '/a/subject' } Delete
 

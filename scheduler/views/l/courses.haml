@@ -11,7 +11,7 @@
         - @subjects.each do |subject|
           %option{ selected: subject.id == params['subject_id'], value: subject.id }= subject.name
 
-  %input.btn.primary{ type: "submit", value: "Create" }/
+  %input.btn.primary{ type: "submit", value: "Add" }/
 
 - unless @courses.empty?
   %table.bordered-table
