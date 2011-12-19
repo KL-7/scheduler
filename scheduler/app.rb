@@ -31,6 +31,12 @@ module Scheduler
       show :root
     end
 
+    get '/courses' do
+      login!
+      @courses = DAO.all(:courses, {}, include: { subject: :subjects, lecturer: :users }).sort_by(&:name)
+      show :courses
+    end
+
     #### admin pages ####
 
     before '/a/*' do
@@ -170,11 +176,6 @@ module Scheduler
         DAO.save :schedules, @schedule
         Course.remove_student(course_id, schedule_item['course_type'])
       end
-    end
-
-    get '/s/courses' do
-      @courses = DAO.all(:courses, {}, include: { subject: :subjects, lecturer: :users }).sort_by(&:name)
-      show :'/s/courses'
     end
 
     #### profile pages ####

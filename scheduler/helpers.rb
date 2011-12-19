@@ -29,16 +29,18 @@ module Scheduler
         when :admin
           [
               { title: 'Users',    path: '/a/users' },
-              { title: 'Subjects', path: '/a/subjects' }
+              { title: 'Subjects', path: '/a/subjects' },
+              { title: 'Courses',  path: '/courses' }
           ]
         when :lecturer
           [
-              { title: 'Courses', path: '/l/courses' }
+              { title: 'All Courses', path: '/courses' },
+              { title: 'My Courses', path: '/l/courses' }
           ]
         when :student
           [
               { title: 'Schedule', path: '/s/schedule' },
-              { title: 'Courses', path: '/s/courses' }
+              { title: 'Courses', path: '/courses' }
           ]
         else []
       end.unshift({ title: 'Home', path: '/' }).map do |item|
